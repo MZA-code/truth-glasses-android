@@ -2,6 +2,27 @@
 <resources>
     <string name="app_name" translatable="false">Truth Glasses</string>
     <string name="a11y_service_description">Reads the structure of the screen in the apps you choose, to find ads and cover them with a message. Nothing is stored or sent: the app has no Internet access.</string>
+
+    <string name="status_on">Service on</string>
+    <string name="status_off">Service off</string>
+    <string name="guide_title">Three steps to put the glasses on</string>
+    <string name="step_restricted">Android 13 and later: open App info, then menu ⋮ → Allow restricted settings. Without this, Android greys out the service of apps installed outside a store.</string>
+    <string name="open_app_info">Open App info</string>
+    <string name="step_accessibility">Open the accessibility settings and turn on Truth Glasses.</string>
     <string name="open_accessibility_settings">Open accessibility settings</string>
+    <string name="step_tile">Add the Glasses tile to Quick Settings, to switch them on and off at any time.</string>
+    <string name="step_tile_manual">Pull down Quick Settings, tap the pencil and drag the Glasses tile in, to switch them on and off at any time.</string>
+    <string name="add_tile">Add the Glasses tile</string>
+
+    <string name="glasses_on">Ads are covered</string>
+    <string name="glasses_off">Ads are left alone</string>
+    <string name="apps_title">Watched apps</string>
+    <string name="sandbox_name">Sandbox</string>
+    <string name="app_not_verified">Detection not verified yet</string>
     <string name="open_sandbox">Test in the sandbox</string>
+    <string name="debug_mode">Debug mode</string>
+    <string name="debug_mode_summary">Red outline around detected labels, blue around covered blocks, screen tree in the logs (adb logcat -s TG).</string>
+    <string name="transparency">No Internet connection. Nothing is stored or sent.</string>
+
+    <string name="tile_label">Glasses</string>
 </resources>

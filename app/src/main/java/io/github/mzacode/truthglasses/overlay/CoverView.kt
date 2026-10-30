@@ -9,7 +9,8 @@ import android.util.TypedValue
 import android.view.View
 import io.github.mzacode.truthglasses.R
 
-data class Cover(val rect: RectF, val message: String)
+// labelRect : position du libellé détecté, dessinée seulement en mode debug
+data class Cover(val rect: RectF, val message: String, val labelRect: RectF? = null)
 
 // Dessine les blocs. Les rectangles sont en coordonnées écran.
 class CoverView(context: Context) : View(context) {
@@ -34,6 +35,15 @@ class CoverView(context: Context) : View(context) {
         typeface = this@CoverView.typeface
     }
     private val fitter = TextFitter(PaintTextMeasurer(typeface), sp(8f), sp(160f))
+    private val containerDebugPaint = debugPaint(Color.BLUE)
+    private val labelDebugPaint = debugPaint(Color.RED)
+
+    // Mode debug : contour bleu autour des conteneurs, rouge autour des libellés
+    var debug = false
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     fun setCovers(newCovers: List<Cover>) {
         if (newCovers == covers) return
@@ -45,7 +55,10 @@ class CoverView(context: Context) : View(context) {
     fun offsetBy(dx: Float, dy: Float) {
         if (covers.isEmpty()) return
         covers = covers.map { cover ->
-            cover.copy(rect = RectF(cover.rect).apply { offset(dx, dy) })
+            cover.copy(
+                rect = RectF(cover.rect).apply { offset(dx, dy) },
+                labelRect = cover.labelRect?.let { RectF(it).apply { offset(dx, dy) } }
+            )
         }
         invalidate()
     }
@@ -55,6 +68,12 @@ class CoverView(context: Context) : View(context) {
         getLocationOnScreen(location)
         canvas.translate(-location[0].toFloat(), -location[1].toFloat())
         covers.forEach { drawCover(canvas, it) }
+        if (debug) {
+            covers.forEach { cover ->
+                canvas.drawRect(cover.rect, containerDebugPaint)
+                cover.labelRect?.let { canvas.drawRect(it, labelDebugPaint) }
+            }
+        }
     }
 
     private fun drawCover(canvas: Canvas, cover: Cover) {
@@ -80,6 +99,12 @@ class CoverView(context: Context) : View(context) {
             canvas.drawText(line, inner.centerX(), top + index * step + baselineOffset, textPaint)
         }
         canvas.restore()
+    }
+
+    private fun debugPaint(debugColor: Int) = Paint().apply {
+        color = debugColor
+        style = Paint.Style.STROKE
+        strokeWidth = dp(3f)
     }
 
     private fun dp(value: Float) =

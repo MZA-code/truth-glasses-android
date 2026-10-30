@@ -17,6 +17,12 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    lint {
+        // Concerne les App Bundles du Play Store : l'appli est distribuée en APK sur GitHub
+        disable += "AppBundleLocaleChanges"
     }
 
     compileOptions {

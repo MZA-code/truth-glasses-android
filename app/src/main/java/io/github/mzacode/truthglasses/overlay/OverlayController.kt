@@ -13,6 +13,12 @@ class OverlayController(service: AccessibilityService) {
     private val coverView = CoverView(service)
     private var attached = false
 
+    var debug: Boolean
+        get() = coverView.debug
+        set(value) {
+            coverView.debug = value
+        }
+
     fun attach() {
         if (attached) return
         val params = WindowManager.LayoutParams(

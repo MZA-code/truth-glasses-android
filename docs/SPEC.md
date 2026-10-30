@@ -82,7 +82,7 @@ Le flux : un événement d'accessibilité arrive → `GlassesService` planifie u
     android:description="@string/a11y_service_description"
     android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeViewScrolled"
     android:accessibilityFeedbackType="feedbackGeneric"
-    android:accessibilityFlags="flagReportViewIds|flagIncludeNotImportantViews"
+    android:accessibilityFlags="flagReportViewIds|flagIncludeNotImportantViews|flagRetrieveInteractiveWindows"
     android:canRetrieveWindowContent="true"
     android:notificationTimeout="100"
     android:isAccessibilityTool="false" />
@@ -126,7 +126,7 @@ Packages de départ (à confirmer sur l'appareil) :
 
 **Ces libellés sont des hypothèses.** Pour chaque appli, il faut faire un dump de l'écran sur un post sponsorisé (`adb shell uiautomator dump` ou le mode debug, voir 4.6), relever le texte exact et la `contentDescription`, puis remplir `verifiedOn`. Les applis changent leur interface régulièrement : on garde des regex simples et une correspondance exacte sur le nœud entier (`^sponsoris[ée]e?$`, insensible à la casse). Les libellés courts et ambigus (`Ad`, `Pub`) ne sont utilisés que dans le profil des applis où leur présence a été vérifiée.
 
-L'écran d'accueil n'affiche que les applis installées. Utilise `packageManager.getPackageInfo` avec un bloc `<queries>` listant ces packages dans le manifeste (pas `QUERY_ALL_PACKAGES`).
+Tant qu'un profil n'est pas vérifié, sa liste de libellés reste vide : l'appli apparaît dans l'accueil avec la mention « Détection pas encore vérifiée » et rien n'y est recouvert. L'écran d'accueil n'affiche que les applis installées. Utilise `packageManager.getPackageInfo` avec un bloc `<queries>` listant ces packages dans le manifeste (pas `QUERY_ALL_PACKAGES`).
 
 ### 4.3 La détection — `UiNode` et `AdDetector`
 
@@ -137,6 +137,7 @@ interface UiNode {
     val text: CharSequence?
     val contentDescription: CharSequence?
     val className: CharSequence?
+    val viewIdResourceName: String?   // pour le mode debug
     val isScrollable: Boolean
     val isVisibleToUser: Boolean
     fun boundsInScreen(): Bounds
@@ -157,7 +158,7 @@ Algorithme pour un scan :
 5. Découper les limites du conteneur à la zone visible de la fenêtre, et ignorer le bloc si ce qui reste fait moins de 48 dp de haut ou de large.
 6. **Texte de la pub** : concaténer le texte et les `contentDescription` du sous-arbre du conteneur, au plus 500 caractères, en minuscules. Ce texte sert uniquement à choisir le thème et n'est jamais stocké ni loggé en release.
 7. Dédoublonner : si un conteneur est inclus dans un autre, ne garder que le plus grand.
-8. Résultat : `List<AdHit(bounds: Bounds, adText: String, packageName: String)>`.
+8. Résultat : `List<AdHit(bounds: Bounds, adText: String, packageName: String, labelBounds: Bounds)>`.
 
 Sur Android 13 et plus, ne pas appeler `recycle()` (inutile). Sur les versions plus anciennes, un `recycle()` dans un `finally` évite les fuites. L'enveloppe `UiNode` peut gérer ça.
 
@@ -232,7 +233,7 @@ Quand il est activé dans l'appli :
 - un contour rouge est dessiné autour de chaque **libellé** détecté, et un contour bleu autour de chaque **conteneur** retenu ;
 - à chaque `TYPE_WINDOW_STATE_CHANGED`, l'arbre de l'écran est loggé sous le tag `TG` (classe, texte, `contentDescription`, `viewIdResourceName`, `isScrollable`, limites), avec une indentation par profondeur.
 
-C'est l'outil principal pour trouver et vérifier les libellés des vraies applis (section 4.2).
+C'est l'outil principal pour trouver et vérifier les libellés des vraies applis (section 4.2). En build release, le texte et la `contentDescription` sont remplacés par leur longueur (`text=<12 chars>`) : le contenu de l'écran n'apparaît jamais dans les logs. Pour relever des libellés, utiliser un build debug.
 
 ### 4.7 Le bac à sable — `SandboxActivity`
 
@@ -309,7 +310,8 @@ Important : garder **le même keystore** pour toutes les versions, sinon les uti
 ## 9. Risques et points d'attention
 
 - **Les applis changent leurs libellés** : d'où les profils datés, le mode debug et le bac à sable. Les mises à jour d'Instagram ou de YouTube casseront parfois la détection, c'est normal.
-- **Calque visible par-dessus le volet des réglages rapides** : constaté au jalon M1 sur l'API 37. Ouvrir le volet ne change pas la fenêtre active, et le calque est dessiné au-dessus. Un bloc peut donc masquer la tuile : à traiter avant le jalon M4.
+- **Volet des réglages rapides** : il s'ouvre sans changer la fenêtre active, et le calque passait par-dessus (constaté au jalon M1). Corrigé au jalon M4 : tant qu'une appli cible est au premier plan, le service lit toutes les 300 ms la liste des fenêtres (`flagRetrieveInteractiveWindows`, seuls le type et la taille sont lus) et masque les blocs quand une fenêtre système dépasse la moitié de l'écran.
+- **Langue choisie pour l'appli** (Réglages Android → Langue de l'appli) : quand un service démarre le processus, ses ressources restent dans la langue du système (constaté sur l'API 37). `appLocalizedResources()` applique cette langue à la main pour les messages et la tuile.
 - **Pub découverte quand son libellé sort de l'écran** : constaté au jalon M2 dans le bac à sable. Le bloc disparaît dès que le libellé passe au-dessus de l'écran, alors que le bas de la pub reste visible ; à l'inverse, en remontant, le bas de la pub apparaît découvert avant son libellé. Le correctif dépend des arbres réels (un libellé hors écran peut rester présent avec `isVisibleToUser = false` dans les applis à base de `RecyclerView`) : à trancher avec les dumps du jalon M5.
 - **Léger retard au scroll rapide** : limité par le décalage immédiat (`scrollDeltaY`), mais jamais parfait. Certaines applis ne remplissent pas `scrollDeltaY` : on se contente alors du rescan.
 - **Applis qui exposent peu leur arbre** : certaines vues personnalisées ou rendues dans un canvas n'exposent pas de nœuds. Dans ce cas, pas de détection possible : le noter dans le profil.

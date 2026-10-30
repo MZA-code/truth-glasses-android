@@ -1,6 +1,7 @@
 package io.github.mzacode.truthglasses.detect
 
-data class AdHit(val bounds: Bounds, val adText: String, val packageName: String)
+// labelBounds : position du libellé qui a déclenché la détection (contour rouge du mode debug)
+data class AdHit(val bounds: Bounds, val adText: String, val packageName: String, val labelBounds: Bounds)
 
 object AdDetector {
     private const val MAX_NODES = 3000
@@ -16,7 +17,7 @@ object AdDetector {
             val container = findContainer(label, root, window) ?: return@mapNotNull null
             val visible = container.boundsInScreen().intersect(window) ?: return@mapNotNull null
             if (visible.width < minSidePx || visible.height < minSidePx) return@mapNotNull null
-            AdHit(visible, collectText(container), profile.packageName)
+            AdHit(visible, collectText(container), profile.packageName, label.boundsInScreen())
         }
         return keepOutermost(hits)
     }

@@ -29,6 +29,7 @@ interface UiNode {
     val text: CharSequence?
     val contentDescription: CharSequence?
     val className: CharSequence?
+    val viewIdResourceName: String?
     val isScrollable: Boolean
     val isVisibleToUser: Boolean
     fun boundsInScreen(): Bounds
@@ -58,6 +59,7 @@ class AccessibilityUiTree(root: AccessibilityNodeInfo) {
         override val text: CharSequence? get() = info.text
         override val contentDescription: CharSequence? get() = info.contentDescription
         override val className: CharSequence? get() = info.className
+        override val viewIdResourceName: String? get() = info.viewIdResourceName
         override val isScrollable: Boolean get() = info.isScrollable
         override val isVisibleToUser: Boolean get() = info.isVisibleToUser
 

@@ -3,6 +3,7 @@ package io.github.mzacode.truthglasses
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import io.github.mzacode.truthglasses.ui.TruthGlassesTheme
 
 // Une pub tous les 3 posts, assez de posts pour que chaque thème apparaisse une fois
 private const val NORMAL_POSTS_BETWEEN_ADS = 2
@@ -40,9 +42,10 @@ private data object Banner : FeedItem
 
 class SandboxActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            TruthGlassesTheme {
                 Surface(Modifier.fillMaxSize()) {
                     val feed = buildFeed(
                         stringArrayResource(R.array.sandbox_ads),
@@ -114,8 +117,9 @@ private fun NarrowBanner() {
             .background(Color(0xFFFFE082))
             .padding(8.dp)
     ) {
-        Text(stringResource(R.string.sandbox_banner_label), style = MaterialTheme.typography.labelSmall)
-        Text(stringResource(R.string.sandbox_banner_text), style = MaterialTheme.typography.titleMedium)
+        // Texte noir fixe : le fond jaune ne change pas en mode sombre
+        Text(stringResource(R.string.sandbox_banner_label), color = Color.Black, style = MaterialTheme.typography.labelSmall)
+        Text(stringResource(R.string.sandbox_banner_text), color = Color.Black, style = MaterialTheme.typography.titleMedium)
     }
 }
 

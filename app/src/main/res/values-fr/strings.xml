@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="a11y_service_description">Lit la structure de l\'écran des applis que vous choisissez pour repérer les publicités et les recouvrir d\'un message. Rien n\'est enregistré ni envoyé : l\'appli n\'a pas accès à Internet.</string>
+
+    <string name="status_on">Service activé</string>
+    <string name="status_off">Service désactivé</string>
+    <string name="guide_title">Trois étapes pour mettre les lunettes</string>
+    <string name="step_restricted">Android 13 et plus : ouvrez Infos sur l\'appli, puis menu ⋮ → Autoriser les paramètres restreints. Sans ça, Android grise le service des applis installées hors store.</string>
+    <string name="open_app_info">Ouvrir Infos sur l\'appli</string>
+    <string name="step_accessibility">Ouvrez les réglages d\'accessibilité et activez Truth Glasses.</string>
     <string name="open_accessibility_settings">Ouvrir les réglages d\'accessibilité</string>
+    <string name="step_tile">Ajoutez la tuile Lunettes aux réglages rapides, pour les mettre et les enlever à tout moment.</string>
+    <string name="step_tile_manual">Tirez le volet des réglages rapides, touchez le crayon et faites glisser la tuile Lunettes, pour les mettre et les enlever à tout moment.</string>
+    <string name="add_tile">Ajouter la tuile Lunettes</string>
+
+    <string name="glasses_on">Les pubs sont recouvertes</string>
+    <string name="glasses_off">Les pubs sont laissées tranquilles</string>
+    <string name="apps_title">Applis surveillées</string>
+    <string name="sandbox_name">Bac à sable</string>
+    <string name="app_not_verified">Détection pas encore vérifiée</string>
     <string name="open_sandbox">Tester dans le bac à sable</string>
+    <string name="debug_mode">Mode debug</string>
+    <string name="debug_mode_summary">Contour rouge autour des libellés détectés, bleu autour des blocs recouverts, arbre de l\'écran dans les logs (adb logcat -s TG).</string>
+    <string name="transparency">Aucune connexion Internet. Rien n\'est enregistré ni envoyé.</string>
+
+    <string name="tile_label">Lunettes</string>
 </resources>

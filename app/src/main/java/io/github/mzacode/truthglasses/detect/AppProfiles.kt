@@ -10,8 +10,8 @@ data class AppProfile(
 )
 
 object AppProfiles {
-    // Les vraies applis arrivent au jalon M5, une fois leurs libellés vérifiés avec un dump
-    fun all(ownPackageName: String): List<AppProfile> = listOf(sandbox(ownPackageName))
+    fun all(ownPackageName: String): List<AppProfile> =
+        listOf(sandbox(ownPackageName), INSTAGRAM, REDDIT, YOUTUBE)
 
     private fun sandbox(ownPackageName: String) = AppProfile(
         packageName = ownPackageName,
@@ -22,4 +22,10 @@ object AppProfiles {
         ),
         verifiedOn = "2026-10-30"
     )
+
+    // Libellés pas encore vérifiés : ils seront relevés avec un dump au jalon M5.
+    // D'ici là, ces profils ne détectent rien.
+    private val INSTAGRAM = AppProfile("com.instagram.android", "Instagram", emptyList(), null)
+    private val REDDIT = AppProfile("com.reddit.frontpage", "Reddit", emptyList(), null)
+    private val YOUTUBE = AppProfile("com.google.android.youtube", "YouTube", emptyList(), null)
 }
