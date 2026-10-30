@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contenu fictif du bac à sable. Volontairement non traduit : les pubs mélangent FR et EN pour tester les thèmes des deux langues. -->
+<resources>
+    <!-- Format : libellé|marque|texte. Une entrée par thème de docs/SPEC.md, 4.4. -->
+    <string-array name="sandbox_ads" translatable="false">
+        <item>Sponsorisé|NovaBank|Crédit TAEG 2,9 %, réponse immédiate</item>
+        <item>Sponsored|MEGASTORE|Black Friday: 50% off everything</item>
+        <item>Sponsorisé|Zenbox|Essai gratuit pendant 30 jours</item>
+        <item>Sponsored|SafeHome|Home insurance and alarm from 9 € a month</item>
+        <item>Sponsorisé|ROYAL SPIN|Bonus de bienvenue de 200 € au casino</item>
+        <item>Sponsorisé|GLOWÉ|Crème anti-âge, résultat en 7 jours</item>
+        <item>Sponsored|Volta Motors|Lease the new electric SUV today</item>
+        <item>Sponsorisé|Pixly|Télécharge l\'appli, c\'est rapide</item>
+        <item>Sponsored|The Daily Hustle|Subscribe to our newsletter</item>
+        <item>Sponsorisé|Orbit Mobile|Le nouveau smartphone au grand écran</item>
+        <item>Sponsored|SkyHop|Cheap flights for your next holiday</item>
+        <item>Sponsorisé|BurgerBox|Burger et pizza livrés en 20 minutes</item>
+        <item>Sponsored|CoinRocket|Crypto trading with huge returns</item>
+    </string-array>
+    <!-- Format : auteur|texte -->
+    <string-array name="sandbox_posts" translatable="false">
+        <item>Camille|Premier café de la journée, tout va bien.</item>
+        <item>Sam|Look at this sunset over the harbour.</item>
+        <item>Noor|Le chat a encore renversé la plante.</item>
+        <item>Alex|Finally finished that puzzle, 2000 pieces.</item>
+        <item>Inès|Balade en forêt ce matin, il pleuvait.</item>
+        <item>Jo|My sourdough looks like a brick again.</item>
+    </string-array>
+    <!-- Bannière étroite, pour tester le format fin -->
+    <string name="sandbox_banner_label" translatable="false">Sponsorisé</string>
+    <string name="sandbox_banner_text" translatable="false">Soldes</string>
+</resources>

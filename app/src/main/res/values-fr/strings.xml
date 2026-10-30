@@ -3,5 +3,4 @@
     <string name="a11y_service_description">Lit la structure de l\'écran des applis que vous choisissez pour repérer les publicités et les recouvrir d\'un message. Rien n\'est enregistré ni envoyé : l\'appli n\'a pas accès à Internet.</string>
     <string name="open_accessibility_settings">Ouvrir les réglages d\'accessibilité</string>
     <string name="open_sandbox">Tester dans le bac à sable</string>
-    <string name="sandbox_placeholder">Le faux fil arrive bientôt.</string>
 </resources>

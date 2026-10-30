@@ -139,13 +139,13 @@ interface UiNode {
     val className: CharSequence?
     val isScrollable: Boolean
     val isVisibleToUser: Boolean
-    fun boundsInScreen(): Rect
+    fun boundsInScreen(): Bounds
     val parent: UiNode?
     val children: List<UiNode>
 }
 ```
 
-Une implémentation enveloppe `AccessibilityNodeInfo`. Les tests utilisent un faux arbre construit à la main.
+Une implémentation enveloppe `AccessibilityNodeInfo`. Les tests utilisent un faux arbre construit à la main. `Bounds` est un petit type en pur Kotlin, car `android.graphics.Rect` n'a aucun comportement dans les tests JVM.
 
 Algorithme pour un scan :
 
@@ -153,11 +153,11 @@ Algorithme pour un scan :
 2. Parcourir l'arbre en largeur avec une **limite de 3 000 nœuds** et une **profondeur maximale de 60**. Ignorer les nœuds invisibles.
 3. Pour chaque nœud dont le texte ou la `contentDescription` correspond à un `sponsorLabel` du profil, on a un **libellé**.
 4. **Remonter jusqu'au conteneur du post** : on remonte les parents jusqu'à trouver le nœud dont le **parent est scrollable** (`isScrollable`). Ce nœud est l'élément de liste, c'est-à-dire le post entier. Cette règle marche pour les `RecyclerView` comme pour les `LazyColumn` en Compose. Au plus 20 niveaux.
-   - S'il n'y a pas de parent scrollable, prendre le premier ancêtre dont la hauteur dépasse 25 % de l'écran. Sinon, ignorer le libellé.
+   - S'il n'y a pas de parent scrollable, prendre le premier ancêtre (hors racine, qui recouvrirait tout l'écran) dont la hauteur dépasse 25 % de l'écran. Sinon, ignorer le libellé.
 5. Découper les limites du conteneur à la zone visible de la fenêtre, et ignorer le bloc si ce qui reste fait moins de 48 dp de haut ou de large.
 6. **Texte de la pub** : concaténer le texte et les `contentDescription` du sous-arbre du conteneur, au plus 500 caractères, en minuscules. Ce texte sert uniquement à choisir le thème et n'est jamais stocké ni loggé en release.
 7. Dédoublonner : si un conteneur est inclus dans un autre, ne garder que le plus grand.
-8. Résultat : `List<AdHit(bounds: Rect, adText: String, packageName: String)>`.
+8. Résultat : `List<AdHit(bounds: Bounds, adText: String, packageName: String)>`.
 
 Sur Android 13 et plus, ne pas appeler `recycle()` (inutile). Sur les versions plus anciennes, un `recycle()` dans un `finally` évite les fuites. L'enveloppe `UiNode` peut gérer ça.
 
@@ -310,6 +310,7 @@ Important : garder **le même keystore** pour toutes les versions, sinon les uti
 
 - **Les applis changent leurs libellés** : d'où les profils datés, le mode debug et le bac à sable. Les mises à jour d'Instagram ou de YouTube casseront parfois la détection, c'est normal.
 - **Calque visible par-dessus le volet des réglages rapides** : constaté au jalon M1 sur l'API 37. Ouvrir le volet ne change pas la fenêtre active, et le calque est dessiné au-dessus. Un bloc peut donc masquer la tuile : à traiter avant le jalon M4.
+- **Pub découverte quand son libellé sort de l'écran** : constaté au jalon M2 dans le bac à sable. Le bloc disparaît dès que le libellé passe au-dessus de l'écran, alors que le bas de la pub reste visible ; à l'inverse, en remontant, le bas de la pub apparaît découvert avant son libellé. Le correctif dépend des arbres réels (un libellé hors écran peut rester présent avec `isVisibleToUser = false` dans les applis à base de `RecyclerView`) : à trancher avec les dumps du jalon M5.
 - **Léger retard au scroll rapide** : limité par le décalage immédiat (`scrollDeltaY`), mais jamais parfait. Certaines applis ne remplissent pas `scrollDeltaY` : on se contente alors du rescan.
 - **Applis qui exposent peu leur arbre** : certaines vues personnalisées ou rendues dans un canvas n'exposent pas de nœuds. Dans ce cas, pas de détection possible : le noter dans le profil.
 - **Installation hors store** : Play Protect peut avertir, et sur Android 13 et plus il faut autoriser les paramètres restreints. Le README doit l'expliquer avec des captures.

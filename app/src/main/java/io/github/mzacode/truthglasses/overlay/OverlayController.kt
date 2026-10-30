@@ -40,6 +40,10 @@ class OverlayController(service: AccessibilityService) {
         coverView.visibility = View.VISIBLE
     }
 
+    fun offsetBy(dx: Float, dy: Float) {
+        coverView.offsetBy(dx, dy)
+    }
+
     fun hide() {
         coverView.setCovers(emptyList())
         coverView.visibility = View.GONE

@@ -40,6 +40,15 @@ class CoverView(context: Context) : View(context) {
         invalidate()
     }
 
+    // Décalage immédiat au scroll, sans attendre le prochain scan
+    fun offsetBy(dx: Float, dy: Float) {
+        if (covers.isEmpty()) return
+        covers = covers.map { cover ->
+            cover.copy(rect = RectF(cover.rect).apply { offset(dx, dy) })
+        }
+        invalidate()
+    }
+
     override fun onDraw(canvas: Canvas) {
         // Le calque peut ne pas démarrer en (0, 0) : on repasse en coordonnées écran
         getLocationOnScreen(location)
