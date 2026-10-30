@@ -1,0 +1,17 @@
+# Gradle / Android
+.gradle/
+.kotlin/
+build/
+local.properties
+*.apk
+*.aab
+
+# Signature : ne jamais committer
+*.jks
+*.keystore
+keystore.properties
+
+# IDE et outils locaux
+.idea/
+*.iml
+.remember/
