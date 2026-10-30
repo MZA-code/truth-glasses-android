@@ -2,17 +2,19 @@ package io.github.mzacode.truthglasses.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.RectF
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.util.TypedValue
 import android.view.accessibility.AccessibilityEvent
-import io.github.mzacode.truthglasses.R
 import io.github.mzacode.truthglasses.detect.AccessibilityUiTree
 import io.github.mzacode.truthglasses.detect.AdDetector
 import io.github.mzacode.truthglasses.detect.AppProfile
 import io.github.mzacode.truthglasses.detect.AppProfiles
+import io.github.mzacode.truthglasses.decode.MessageCatalog
+import io.github.mzacode.truthglasses.decode.MessageDecoder
 import io.github.mzacode.truthglasses.overlay.Cover
 import io.github.mzacode.truthglasses.overlay.OverlayController
 
@@ -20,6 +22,7 @@ class GlassesService : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
     private var overlay: OverlayController? = null
     private var profiles: Map<String, AppProfile> = emptyMap()
+    private var catalog: MessageCatalog? = null
     private var coversShown = false
     private var lastScanAt = 0L
     private var throttledScanPending = false
@@ -47,7 +50,15 @@ class GlassesService : AccessibilityService() {
     override fun onServiceConnected() {
         profiles = AppProfiles.all(packageName).associateBy { it.packageName }
         serviceInfo = serviceInfo.apply { packageNames = profiles.keys.toTypedArray() }
+        catalog = MessageCatalog.from(resources)
         overlay = OverlayController(this).also { it.attach() }
+        scheduleScan()
+    }
+
+    // La langue a pu changer : on recharge les messages
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        catalog = MessageCatalog.from(resources)
         scheduleScan()
     }
 
@@ -94,12 +105,13 @@ class GlassesService : AccessibilityService() {
                 hideCovers()
                 return
             }
+            val messages = catalog ?: return
             val minSidePx = dp(MIN_BLOCK_SIDE_DP).toInt()
+            val density = resources.displayMetrics.density
             val hits = AdDetector.detect(tree.root, profile, minSidePx)
-            // Message fixe en attendant le décodeur (jalon M3)
-            val message = resources.getStringArray(R.array.msg_generic).first()
             val covers = hits.map {
                 val bounds = it.bounds
+                val message = MessageDecoder.decode(it.adText, it.packageName, bounds.width / density, messages)
                 Cover(
                     RectF(
                         bounds.left.toFloat(),

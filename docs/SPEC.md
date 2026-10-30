@@ -66,7 +66,7 @@ app/src/main/res/
 ├── xml/accessibility_service_config.xml
 ├── values/strings.xml, values-fr/strings.xml        Textes de l'appli
 ├── values/messages.xml, values-fr/messages.xml      Messages ironiques (fournis dans le kit)
-└── font/anton_regular.ttf                           Police (licence OFL)
+└── font/anton_regular.ttf                           Police (licence OFL dans app/src/main/assets/licenses/Anton-OFL.txt, livrée dans l'APK)
 ```
 
 Le flux : un événement d'accessibilité arrive → `GlassesService` planifie un scan → `AdDetector` renvoie une liste de `AdHit(bounds, text)` → `MessageDecoder` associe un message à chaque bloc → `CoverView` les dessine.
@@ -221,7 +221,7 @@ Dessin d'un bloc :
 - texte noir en capitales, police **Anton** (Google Fonts, licence OFL : inclure le fichier de licence dans le dépôt), centré horizontalement et verticalement, interligne serré (`lineSpacingMultiplier ≈ 0.95`) ;
 - marge intérieure de 8 dp.
 
-`TextFitter` cherche la plus grande taille de texte qui tient : une dichotomie de 8 sp à 160 sp avec un `StaticLayout`. Le texte tient si (a) aucun mot n'est coupé, c'est-à-dire que chaque mot mesuré avec `Paint.measureText` est plus étroit que la largeur utile, et (b) la hauteur du layout est inférieure ou égale à la hauteur utile. Si même 8 sp ne tient pas, autoriser la coupure des mots. **Mettre en cache** le résultat par clé `(message, largeur, hauteur)` : on ne recalcule que quand la taille du bloc change.
+`TextFitter` cherche la plus grande taille de texte qui tient : une dichotomie de 8 sp à 160 sp avec un `StaticLayout`. Le texte tient si (a) aucun mot n'est coupé, c'est-à-dire que chaque mot mesuré avec `Paint.measureText` est plus étroit que la largeur utile, et (b) la hauteur du layout est inférieure ou égale à la hauteur utile. Si même 8 sp ne tient pas, autoriser la coupure des mots. **Mettre en cache** le résultat par clé `(message, largeur, hauteur)` : on ne recalcule que quand la taille du bloc change. Dans le code, le découpage en lignes est fait par `TextFitter` lui-même (retour à la ligne glouton mesuré avec `Paint.measureText`) plutôt qu'avec `StaticLayout` : `CoverView` dessine exactement ces lignes, et tout est testable sans appareil.
 
 Petit plus facultatif : une apparition qui clignote (2 ou 3 frames d'alpha, environ 300 ms) la première fois qu'un bloc apparaît, en clin d'œil à l'extension.
 

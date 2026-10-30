@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.TypedValue
 import android.view.View
+import io.github.mzacode.truthglasses.R
 
 data class Cover(val rect: RectF, val message: String)
 
@@ -14,8 +15,10 @@ data class Cover(val rect: RectF, val message: String)
 class CoverView(context: Context) : View(context) {
     private var covers: List<Cover> = emptyList()
     private val location = IntArray(2)
+    private val inner = RectF()
 
     private val borderWidth = dp(2f)
+    private val padding = dp(8f)
     private val fillPaint = Paint().apply {
         color = Color.parseColor("#F2F2F2")
     }
@@ -24,15 +27,13 @@ class CoverView(context: Context) : View(context) {
         style = Paint.Style.STROKE
         strokeWidth = borderWidth
     }
-    // Taille fixe en attendant TextFitter et la police Anton (jalon M3)
+    private val typeface = resources.getFont(R.font.anton_regular)
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         textAlign = Paint.Align.CENTER
-        isFakeBoldText = true
-        textSize = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP, 48f, resources.displayMetrics
-        )
+        typeface = this@CoverView.typeface
     }
+    private val fitter = TextFitter(PaintTextMeasurer(typeface), sp(8f), sp(160f))
 
     fun setCovers(newCovers: List<Cover>) {
         if (newCovers == covers) return
@@ -53,22 +54,37 @@ class CoverView(context: Context) : View(context) {
         // Le calque peut ne pas démarrer en (0, 0) : on repasse en coordonnées écran
         getLocationOnScreen(location)
         canvas.translate(-location[0].toFloat(), -location[1].toFloat())
-        for (cover in covers) {
-            canvas.drawRect(cover.rect, fillPaint)
-            // La bordure est tracée à l'intérieur du bloc
-            val inset = borderWidth / 2
-            canvas.drawRect(
-                cover.rect.left + inset,
-                cover.rect.top + inset,
-                cover.rect.right - inset,
-                cover.rect.bottom - inset,
-                borderPaint
-            )
-            val baseline = cover.rect.centerY() - (textPaint.ascent() + textPaint.descent()) / 2
-            canvas.drawText(cover.message, cover.rect.centerX(), baseline, textPaint)
+        covers.forEach { drawCover(canvas, it) }
+    }
+
+    private fun drawCover(canvas: Canvas, cover: Cover) {
+        val rect = cover.rect
+        canvas.drawRect(rect, fillPaint)
+        // La bordure est tracée à l'intérieur du bloc
+        val half = borderWidth / 2
+        canvas.drawRect(rect.left + half, rect.top + half, rect.right - half, rect.bottom - half, borderPaint)
+
+        val inset = borderWidth + padding
+        inner.set(rect.left + inset, rect.top + inset, rect.right - inset, rect.bottom - inset)
+        if (inner.width() <= 0 || inner.height() <= 0) return
+        val fitted = fitter.fit(cover.message, inner.width(), inner.height())
+        textPaint.textSize = fitted.sizePx
+        val step = fitter.lineStep(fitted.sizePx)
+        val top = inner.centerY() - fitted.lines.size * step / 2
+        // Centre chaque ligne verticalement dans sa tranche de hauteur step
+        val baselineOffset = step / 2 - (textPaint.ascent() + textPaint.descent()) / 2
+
+        canvas.save()
+        canvas.clipRect(inner)
+        fitted.lines.forEachIndexed { index, line ->
+            canvas.drawText(line, inner.centerX(), top + index * step + baselineOffset, textPaint)
         }
+        canvas.restore()
     }
 
     private fun dp(value: Float) =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
+
+    private fun sp(value: Float) =
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, resources.displayMetrics)
 }
