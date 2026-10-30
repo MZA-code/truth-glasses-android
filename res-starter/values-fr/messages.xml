@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Messages ironiques affichés sur les pubs — Français. Un string-array par thème (voir docs/SPEC.md, 4.4). -->
+<resources>
+    <string-array name="msg_credit">
+        <item>TU VAS PAYER TROIS FOIS LE PRIX</item>
+        <item>ENDETTE-TOI</item>
+        <item>SIGNE SANS LIRE</item>
+    </string-array>
+    <string-array name="msg_sale">
+        <item>TU N\'EN AS PAS BESOIN</item>
+        <item>ACHÈTE MAINTENANT, RÉFLÉCHIS JAMAIS</item>
+        <item>VITE, AVANT DE RÉFLÉCHIR</item>
+    </string-array>
+    <string-array name="msg_free">
+        <item>C\'EST TOI LE PRODUIT</item>
+        <item>RIEN N\'EST GRATUIT</item>
+    </string-array>
+    <string-array name="msg_insurance">
+        <item>AIE PEUR</item>
+        <item>TOUT VA MAL SE PASSER</item>
+    </string-array>
+    <string-array name="msg_gambling">
+        <item>LA BANQUE GAGNE TOUJOURS</item>
+        <item>PERDS TON SALAIRE</item>
+    </string-array>
+    <string-array name="msg_beauty">
+        <item>TU N\'ES PAS ASSEZ BIEN</item>
+        <item>VIEILLIR EST INTERDIT</item>
+    </string-array>
+    <string-array name="msg_car">
+        <item>TON STATUT DÉPEND DE TA CAISSE</item>
+        <item>ROULE À CRÉDIT</item>
+    </string-array>
+    <string-array name="msg_app">
+        <item>DONNE-NOUS TES DONNÉES</item>
+        <item>RESTE SUR TON ÉCRAN</item>
+    </string-array>
+    <string-array name="msg_subscription">
+        <item>PAIE TOUS LES MOIS POUR TOUJOURS</item>
+        <item>OUBLIE DE RÉSILIER</item>
+    </string-array>
+    <string-array name="msg_tech">
+        <item>L\'ANCIEN MARCHAIT TRÈS BIEN</item>
+        <item>JETTE ET RACHÈTE</item>
+    </string-array>
+    <string-array name="msg_travel">
+        <item>TA VIE EST TROP NULLE POUR RESTER CHEZ TOI</item>
+        <item>TRAVAILLE POUR TES 2 SEMAINES</item>
+    </string-array>
+    <string-array name="msg_food">
+        <item>MANGE SANS FAIM</item>
+        <item>NE CUISINE PLUS JAMAIS</item>
+    </string-array>
+    <string-array name="msg_invest">
+        <item>QUELQU\'UN VA S\'ENRICHIR, PAS TOI</item>
+        <item>PARIE TES ÉCONOMIES</item>
+    </string-array>
+    <string-array name="msg_generic">
+        <item>OBÉIS</item>
+        <item>CONSOMME</item>
+        <item>ACHÈTE</item>
+        <item>RESTE ENDORMI</item>
+        <item>NE PENSE PAS</item>
+        <item>REGARDE LA TÉLÉ</item>
+        <item>TRAVAILLE · ACHÈTE · DORS</item>
+        <item>CONFORME-TOI</item>
+        <item>PAS D\'IMAGINATION</item>
+        <item>SOUMETS-TOI</item>
+        <item>CECI EST TON DIEU</item>
+        <item>DÉPENSE</item>
+        <item>SCROLLE</item>
+        <item>CONTINUE DE SCROLLER</item>
+    </string-array>
+    <string-array name="msg_short">
+        <item>OBÉIS</item>
+        <item>ACHÈTE</item>
+        <item>DORS</item>
+        <item>PAYE</item>
+        <item>CONSOMME</item>
+        <item>NE PENSE PAS</item>
+        <item>TAIS-TOI</item>
+        <item>SCROLLE</item>
+    </string-array>
+</resources>

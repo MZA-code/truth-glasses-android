@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Messages ironiques affichés sur les pubs — English (default). Un string-array par thème (voir docs/SPEC.md, 4.4). -->
+<resources>
+    <string-array name="msg_credit">
+        <item>YOU\'LL PAY THREE TIMES THE PRICE</item>
+        <item>GET INTO DEBT</item>
+        <item>SIGN WITHOUT READING</item>
+    </string-array>
+    <string-array name="msg_sale">
+        <item>YOU DON\'T NEED IT</item>
+        <item>BUY NOW, NEVER THINK</item>
+        <item>HURRY, BEFORE YOU THINK</item>
+    </string-array>
+    <string-array name="msg_free">
+        <item>YOU ARE THE PRODUCT</item>
+        <item>NOTHING IS FREE</item>
+    </string-array>
+    <string-array name="msg_insurance">
+        <item>BE AFRAID</item>
+        <item>EVERYTHING WILL GO WRONG</item>
+    </string-array>
+    <string-array name="msg_gambling">
+        <item>THE HOUSE ALWAYS WINS</item>
+        <item>LOSE YOUR PAYCHECK</item>
+    </string-array>
+    <string-array name="msg_beauty">
+        <item>YOU ARE NOT ENOUGH</item>
+        <item>AGING IS FORBIDDEN</item>
+    </string-array>
+    <string-array name="msg_car">
+        <item>YOUR CAR IS YOUR STATUS</item>
+        <item>DRIVE ON CREDIT</item>
+    </string-array>
+    <string-array name="msg_app">
+        <item>GIVE US YOUR DATA</item>
+        <item>STAY ON YOUR SCREEN</item>
+    </string-array>
+    <string-array name="msg_subscription">
+        <item>PAY EVERY MONTH FOREVER</item>
+        <item>FORGET TO CANCEL</item>
+    </string-array>
+    <string-array name="msg_tech">
+        <item>THE OLD ONE WORKED FINE</item>
+        <item>THROW AWAY, BUY AGAIN</item>
+    </string-array>
+    <string-array name="msg_travel">
+        <item>YOUR LIFE IS TOO DULL TO STAY HOME</item>
+        <item>WORK ALL YEAR FOR TWO WEEKS OFF</item>
+    </string-array>
+    <string-array name="msg_food">
+        <item>EAT WITHOUT HUNGER</item>
+        <item>NEVER COOK AGAIN</item>
+    </string-array>
+    <string-array name="msg_invest">
+        <item>SOMEONE GETS RICH, NOT YOU</item>
+        <item>BET YOUR SAVINGS</item>
+    </string-array>
+    <string-array name="msg_generic">
+        <item>OBEY</item>
+        <item>CONSUME</item>
+        <item>BUY</item>
+        <item>STAY ASLEEP</item>
+        <item>DO NOT THINK</item>
+        <item>WATCH TV</item>
+        <item>WORK · BUY · SLEEP</item>
+        <item>CONFORM</item>
+        <item>NO IMAGINATION</item>
+        <item>SUBMIT</item>
+        <item>THIS IS YOUR GOD</item>
+        <item>SPEND</item>
+        <item>SCROLL</item>
+        <item>KEEP SCROLLING</item>
+    </string-array>
+    <string-array name="msg_short">
+        <item>OBEY</item>
+        <item>BUY</item>
+        <item>SLEEP</item>
+        <item>PAY</item>
+        <item>CONSUME</item>
+        <item>DON\'T THINK</item>
+        <item>SHUT UP</item>
+        <item>SCROLL</item>
+    </string-array>
+</resources>
