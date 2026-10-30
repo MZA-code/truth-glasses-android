@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Truth Glasses</string>
-    <string name="home_placeholder">The glasses are coming soon.</string>
+    <string name="a11y_service_description">Reads the structure of the screen in the apps you choose, to find ads and cover them with a message. Nothing is stored or sent: the app has no Internet access.</string>
+    <string name="open_accessibility_settings">Open accessibility settings</string>
+    <string name="open_sandbox">Test in the sandbox</string>
+    <string name="sandbox_placeholder">The fake feed is coming soon.</string>
 </resources>

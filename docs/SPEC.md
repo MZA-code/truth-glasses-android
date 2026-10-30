@@ -97,7 +97,7 @@ Comportement attendu :
 - **`onServiceConnected`** : appliquer `packageNames` à partir des réglages (`serviceInfo = serviceInfo.apply { packageNames = ... }`), créer le calque, et s'abonner aux changements de préférences.
 - **Changement des applis activées** : remettre à jour `packageNames` à chaud.
 - **`onAccessibilityEvent`** :
-  - `TYPE_WINDOW_STATE_CHANGED` d'un package qui n'est pas ciblé → vider les blocs et masquer le calque.
+  - Sortie d'une appli ciblée → vider les blocs et masquer le calque. `packageNames` filtre les événements des autres applis et `rootInActiveWindow` y vaut `null` (constaté sur l'API 37) : aucun événement ne signale la sortie, donc le service vérifie la fenêtre active toutes les 500 ms tant qu'un bloc est affiché.
   - `TYPE_VIEW_SCROLLED` → **décaler tout de suite** les blocs existants de `-event.scrollDeltaY` (et `-scrollDeltaX`) quand la valeur n'est pas nulle, pour que le scroll reste fluide, puis planifier un scan.
   - Les autres événements → planifier un scan.
 - **Planification** : un `Handler` sur le thread principal. Un scan au plus toutes les **100 ms**, plus un scan final **150 ms** après le dernier événement.
@@ -309,6 +309,7 @@ Important : garder **le même keystore** pour toutes les versions, sinon les uti
 ## 9. Risques et points d'attention
 
 - **Les applis changent leurs libellés** : d'où les profils datés, le mode debug et le bac à sable. Les mises à jour d'Instagram ou de YouTube casseront parfois la détection, c'est normal.
+- **Calque visible par-dessus le volet des réglages rapides** : constaté au jalon M1 sur l'API 37. Ouvrir le volet ne change pas la fenêtre active, et le calque est dessiné au-dessus. Un bloc peut donc masquer la tuile : à traiter avant le jalon M4.
 - **Léger retard au scroll rapide** : limité par le décalage immédiat (`scrollDeltaY`), mais jamais parfait. Certaines applis ne remplissent pas `scrollDeltaY` : on se contente alors du rescan.
 - **Applis qui exposent peu leur arbre** : certaines vues personnalisées ou rendues dans un canvas n'exposent pas de nœuds. Dans ce cas, pas de détection possible : le noter dans le profil.
 - **Installation hors store** : Play Protect peut avertir, et sur Android 13 et plus il faut autoriser les paramètres restreints. Le README doit l'expliquer avec des captures.
