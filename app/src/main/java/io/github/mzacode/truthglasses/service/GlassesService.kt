@@ -21,6 +21,7 @@ import io.github.mzacode.truthglasses.decode.MessageCatalog
 import io.github.mzacode.truthglasses.decode.MessageDecoder
 import io.github.mzacode.truthglasses.detect.AccessibilityUiTree
 import io.github.mzacode.truthglasses.detect.AdDetector
+import io.github.mzacode.truthglasses.detect.AdMemory
 import io.github.mzacode.truthglasses.detect.AppProfile
 import io.github.mzacode.truthglasses.detect.AppProfiles
 import io.github.mzacode.truthglasses.detect.Bounds
@@ -38,6 +39,9 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
     // Profils des applis activées par l'utilisateur
     private var profiles: Map<String, AppProfile> = emptyMap()
     private var catalog: MessageCatalog? = null
+    // Pubs déjà recouvertes dans l'appli au premier plan (empreintes seulement)
+    private val memory = AdMemory()
+    private var memoryPackage: String? = null
     private var coversShown = false
     private var hiddenByPanel = false
     private var watching = false
@@ -61,6 +65,7 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
             if (activeProfile() == null) {
                 watching = false
                 hideCovers()
+                forgetAds()
                 return
             }
             if (systemPanelOpen()) {
@@ -177,11 +182,17 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
                 return
             }
             startWatching()
+            if (memoryPackage != profile.packageName) {
+                forgetAds()
+                memoryPackage = profile.packageName
+            }
             val minSidePx = dp(MIN_BLOCK_SIDE_DP).toInt()
             val density = resources.displayMetrics.density
-            val covers = AdDetector.detect(tree.root, profile, minSidePx).map {
-                val message = MessageDecoder.decode(it.adText, it.packageName, it.bounds.width / density, messages)
-                Cover(it.bounds.toRectF(), message, it.labelBounds.toRectF())
+            val covers = AdDetector.detect(tree.root, profile, minSidePx, memory).map {
+                val message = memory.messageFor(it.fingerprint) {
+                    MessageDecoder.decode(it.adText, it.packageName, it.bounds.width / density, messages)
+                }
+                Cover(it.bounds.toRectF(), message, it.labelBounds?.toRectF())
             }
             showCovers(covers)
         } finally {
@@ -208,8 +219,14 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         coversShown = false
     }
 
+    private fun forgetAds() {
+        memory.clear()
+        memoryPackage = null
+    }
+
     private fun stopCovering() {
         hideCovers()
+        forgetAds()
         hiddenByPanel = false
         watching = false
         handler.removeCallbacks(watch)
@@ -257,6 +274,7 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         coversShown = false
         hiddenByPanel = false
         watching = false
+        forgetAds()
         overlay?.detach()
         overlay = null
     }

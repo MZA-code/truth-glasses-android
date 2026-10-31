@@ -14,7 +14,77 @@ class AdDetectorTest {
         verifiedOn = null
     )
 
-    private fun detect(root: UiNode) = AdDetector.detect(root, profile, minSidePx = 100)
+    private fun detect(root: UiNode, memory: AdMemory? = null) =
+        AdDetector.detect(root, profile, minSidePx = 100, memory = memory)
+
+    // Post façon Instagram : en-tête avec le libellé, image, légende
+    private fun photoAd(top: Int, caption: String, withHeader: Boolean = true): FakeNode {
+        val header = FakeNode(Bounds(0, top, 1000, top + 100), FakeNode(Bounds(0, top, 200, top + 50), text = "Sponsorisé"))
+        val image = FakeNode(Bounds(0, top + 100, 1000, top + 900))
+        val legend = FakeNode(Bounds(0, top + 900, 1000, top + 1000), text = caption)
+        val children = if (withHeader) arrayOf(header, image, legend) else arrayOf(image, legend)
+        return FakeNode(Bounds(0, top, 1000, top + 1000), *children)
+    }
+
+    private fun feed(vararg posts: FakeNode) = FakeNode(window, FakeNode(window, *posts, scrollable = true))
+
+    // Ce que fait le service : retenir les pubs recouvertes
+    private fun rememberAll(hits: List<AdHit>, memory: AdMemory) =
+        hits.forEach { hit -> memory.messageFor(hit.fingerprint) { "OBÉIS" } }
+
+    @Test
+    fun `known ad stays covered once its label left the screen`() {
+        val memory = AdMemory()
+        rememberAll(detect(feed(photoAd(0, "NovaBank Crédit TAEG 2,9 %, réponse immédiate")), memory), memory)
+
+        // Le libellé est sorti par le haut : l'appli a retiré l'en-tête de l'arbre
+        val hits = detect(feed(photoAd(-100, "NovaBank Crédit TAEG 2,9 %, réponse immédiate", withHeader = false)), memory)
+
+        assertEquals(listOf(Bounds(0, 0, 1000, 900)), hits.map { it.bounds })
+        assertEquals(null, hits.single().labelBounds)
+    }
+
+    @Test
+    fun `normal post without label is never covered by memory`() {
+        val memory = AdMemory()
+        rememberAll(detect(feed(photoAd(0, "NovaBank Crédit TAEG 2,9 %, réponse immédiate")), memory), memory)
+
+        val hits = detect(feed(photoAd(0, "Premier café de la journée, tout va bien.", withHeader = false)), memory)
+
+        assertTrue(hits.isEmpty())
+    }
+
+    @Test
+    fun `short shared texts do not identify an ad`() {
+        val memory = AdMemory()
+        val ad = FakeNode(
+            Bounds(0, 0, 1000, 800),
+            FakeNode(Bounds(0, 0, 200, 50), text = "Sponsorisé"),
+            FakeNode(Bounds(0, 700, 1000, 800), text = "En savoir plus")
+        )
+        rememberAll(detect(feed(ad)), memory)
+
+        val post = FakeNode(Bounds(0, 0, 1000, 800), FakeNode(Bounds(0, 700, 1000, 800), text = "En savoir plus"))
+
+        assertTrue(memory.isEmpty)
+        assertTrue(detect(feed(post), memory).isEmpty())
+    }
+
+    @Test
+    fun `invisible label still in the tree is matched by memory`() {
+        val memory = AdMemory()
+        val caption = "Crème anti-âge, résultat en 7 jours"
+        rememberAll(detect(feed(photoAd(0, caption))), memory)
+
+        // Liste qui garde les nœuds hors écran, marqués invisibles
+        val ad = FakeNode(
+            Bounds(0, -100, 1000, 900),
+            FakeNode(Bounds(0, -100, 1000, 0), FakeNode(Bounds(0, -100, 200, -50), text = "Sponsorisé", visible = false), visible = false),
+            FakeNode(Bounds(0, 800, 1000, 900), text = caption)
+        )
+
+        assertEquals(1, detect(feed(ad), memory).size)
+    }
 
     private fun label(bounds: Bounds = Bounds(0, 100, 200, 150), visible: Boolean = true) =
         FakeNode(bounds, text = "Sponsorisé", visible = visible)
