@@ -44,6 +44,57 @@ class AdDetectorTest {
         assertEquals(null, hits.single().labelBounds)
     }
 
+    // Fil façon Instagram : la liste des posts est dans une page d'un conteneur qui défile lui aussi
+    private fun pagedFeed(vararg posts: FakeNode) =
+        FakeNode(window, FakeNode(window, FakeNode(window, FakeNode(window, *posts, scrollable = true)), scrollable = true))
+
+    @Test
+    fun `known ad in a nested feed does not cover the whole page`() {
+        val memory = AdMemory()
+        val caption = "NovaBank Crédit TAEG 2,9 %, réponse immédiate"
+        rememberAll(detect(pagedFeed(photoAd(0, caption)), memory), memory)
+
+        val hits = detect(pagedFeed(photoAd(-100, caption, withHeader = false)), memory)
+
+        assertEquals(listOf(Bounds(0, 0, 1000, 900)), hits.map { it.bounds })
+    }
+
+    @Test
+    fun `cover goes away once the ad left a nested feed`() {
+        val memory = AdMemory()
+        val caption = "NovaBank Crédit TAEG 2,9 %, réponse immédiate"
+        val normal = "Premier café de la journée, tout va bien."
+        // La pub et un post normal sont à l'écran en même temps, puis la pub sort
+        rememberAll(detect(pagedFeed(photoAd(0, caption), photoAd(1000, normal, withHeader = false)), memory), memory)
+        rememberAll(detect(pagedFeed(photoAd(-100, caption, withHeader = false), photoAd(900, normal, withHeader = false)), memory), memory)
+
+        val hits = detect(pagedFeed(photoAd(0, normal, withHeader = false)), memory)
+
+        assertTrue(hits.isEmpty())
+    }
+
+    @Test
+    fun `known ad with a carousel stays covered as a whole`() {
+        val memory = AdMemory()
+        val caption = "NovaBank Crédit TAEG 2,9 %, réponse immédiate"
+        fun carouselAd(top: Int, withHeader: Boolean): FakeNode {
+            val carousel = FakeNode(
+                Bounds(0, top + 100, 1000, top + 900),
+                FakeNode(Bounds(0, top + 100, 1000, top + 900), description = "Photo de la carte NovaBank numéro un"),
+                scrollable = true
+            )
+            val legend = FakeNode(Bounds(0, top + 900, 1000, top + 1000), text = caption)
+            val header = FakeNode(Bounds(0, top, 1000, top + 100), FakeNode(Bounds(0, top, 200, top + 50), text = "Sponsorisé"))
+            val children = if (withHeader) arrayOf(header, carousel, legend) else arrayOf(carousel, legend)
+            return FakeNode(Bounds(0, top, 1000, top + 1000), *children)
+        }
+        rememberAll(detect(feed(carouselAd(0, withHeader = true)), memory), memory)
+
+        val hits = detect(feed(carouselAd(-100, withHeader = false)), memory)
+
+        assertEquals(listOf(Bounds(0, 0, 1000, 900)), hits.map { it.bounds })
+    }
+
     @Test
     fun `normal post without label is never covered by memory`() {
         val memory = AdMemory()

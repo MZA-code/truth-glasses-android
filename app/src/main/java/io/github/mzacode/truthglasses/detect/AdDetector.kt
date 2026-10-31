@@ -100,13 +100,22 @@ object AdDetector {
         return builder.toString().trim().take(MAX_TEXT_LENGTH).lowercase()
     }
 
-    // Hash des textes longs du bloc, y compris ceux des nœuds hors écran encore présents
+    // Hash des textes longs du bloc, y compris ceux des nœuds hors écran encore présents.
+    // Les listes imbriquées sont exclues : une page qui contient tout le fil n'a pas d'empreinte,
+    // sinon elle serait prise pour la pub qu'elle contient et le fil entier serait recouvert.
     private fun fingerprint(container: UiNode): Set<Int> {
         val hashes = mutableSetOf<Int>()
-        walk(container) { text ->
-            val normalized = text.toString().trim().lowercase()
-            if (normalized.length >= MIN_FINGERPRINT_TEXT) hashes += normalized.hashCode()
-            true
+        val stack = ArrayDeque<UiNode>()
+        stack.addLast(container)
+        var visited = 0
+        while (stack.isNotEmpty() && visited < MAX_NODES) {
+            val node = stack.removeLast()
+            visited++
+            listOfNotNull(node.text, node.contentDescription).forEach {
+                val normalized = it.toString().trim().lowercase()
+                if (normalized.length >= MIN_FINGERPRINT_TEXT) hashes += normalized.hashCode()
+            }
+            node.children.filterNot { it.isScrollable }.forEach { stack.addLast(it) }
         }
         return hashes
     }
