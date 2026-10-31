@@ -19,6 +19,10 @@ class OverlayController(service: AccessibilityService) {
             coverView.debug = value
         }
 
+    // Blocs affichés, avec le décalage du scroll déjà appliqué
+    val covers: List<Cover>
+        get() = coverView.covers
+
     fun attach() {
         if (attached) return
         val params = WindowManager.LayoutParams(

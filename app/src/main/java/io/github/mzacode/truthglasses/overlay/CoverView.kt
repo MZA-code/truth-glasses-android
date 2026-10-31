@@ -14,7 +14,8 @@ data class Cover(val rect: RectF, val message: String, val labelRect: RectF? = n
 
 // Dessine les blocs. Les rectangles sont en coordonnées écran.
 class CoverView(context: Context) : View(context) {
-    private var covers: List<Cover> = emptyList()
+    var covers: List<Cover> = emptyList()
+        private set
     private val location = IntArray(2)
     private val inner = RectF()
 

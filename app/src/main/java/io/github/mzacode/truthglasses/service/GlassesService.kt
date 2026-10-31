@@ -25,6 +25,7 @@ import io.github.mzacode.truthglasses.detect.AdMemory
 import io.github.mzacode.truthglasses.detect.AppProfile
 import io.github.mzacode.truthglasses.detect.AppProfiles
 import io.github.mzacode.truthglasses.detect.Bounds
+import io.github.mzacode.truthglasses.detect.CoverContinuity
 import io.github.mzacode.truthglasses.detect.TreeDump
 import io.github.mzacode.truthglasses.overlay.Cover
 import io.github.mzacode.truthglasses.overlay.OverlayController
@@ -188,9 +189,12 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
             }
             val minSidePx = dp(MIN_BLOCK_SIDE_DP).toInt()
             val density = resources.displayMetrics.density
+            val shown = overlay?.covers.orEmpty().map { it.rect.toBounds() to it.message }
             val covers = AdDetector.detect(tree.root, profile, minSidePx, memory).map {
+                // Pub déjà vue, sinon bloc qui grandit à la place d'un bloc affiché, sinon nouveau message
                 val message = memory.messageFor(it.fingerprint) {
-                    MessageDecoder.decode(it.adText, it.packageName, it.bounds.width / density, messages)
+                    CoverContinuity.previousMessage(it.bounds, shown)
+                        ?: MessageDecoder.decode(it.adText, it.packageName, it.bounds.width / density, messages)
                 }
                 Cover(it.bounds.toRectF(), message, it.labelBounds?.toRectF())
             }
@@ -283,6 +287,8 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
 
     private fun Bounds.toRectF() = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+
+    private fun RectF.toBounds() = Bounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
 
     companion object {
         private const val TAG = "TG"
