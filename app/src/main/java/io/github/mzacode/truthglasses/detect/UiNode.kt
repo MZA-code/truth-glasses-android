@@ -56,7 +56,10 @@ class AccessibilityUiTree(root: AccessibilityNodeInfo) {
         private val info: AccessibilityNodeInfo,
         override val parent: UiNode?
     ) : UiNode {
-        override val text: CharSequence? get() = info.text
+        // Le texte des champs de saisie n'est jamais lu : ce que tape l'utilisateur ne sort pas
+        // de cette enveloppe, ni vers la détection ni vers le mode debug
+        override val text: CharSequence?
+            get() = if (info.isEditable || info.isPassword) null else info.text
         override val contentDescription: CharSequence? get() = info.contentDescription
         override val className: CharSequence? get() = info.className
         override val viewIdResourceName: String? get() = info.viewIdResourceName
