@@ -278,7 +278,7 @@ Rien d'autre : pas d'`INTERNET`, pas de `SYSTEM_ALERT_WINDOW`, pas de `QUERY_ALL
 `.github/workflows/build.yml` :
 
 - **À chaque push et pull request** : `actions/checkout`, `actions/setup-java` (Temurin, JDK 17 ou celui exigé par l'AGP choisi), `gradle/actions/setup-gradle`, puis `./gradlew testDebugUnitTest assembleDebug`, et l'APK debug téléversé comme artefact.
-- **Sur un tag `v*`** : `assembleRelease` signé avec un keystore stocké dans les secrets du dépôt (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`), puis création d'une Release GitHub avec l'APK (`softprops/action-gh-release`).
+- **Sur un tag `v*`** : `assembleRelease` signé avec un keystore stocké dans les secrets du dépôt (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`), puis création d'une Release GitHub avec l'APK et son empreinte SHA-256 (`gh release create`, préinstallé sur les runners). Ce job manipule le keystore et peut écrire dans le dépôt : pas d'action tierce pour publier, et les actions tierces restantes (`gradle/actions/setup-gradle`) sont épinglées par SHA de commit.
 - Utiliser les versions majeures actuelles de ces actions (à vérifier au moment d'écrire le workflow).
 
 Pour générer le keystore, en local et une seule fois :
