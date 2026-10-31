@@ -14,6 +14,8 @@
 
 ---
 
+> ⚠️ **Beta version: not stable and not final.** Expect bugs and big changes. See [Status](#status).
+
 <p align="center">
   <img src="docs/images/demo.gif" alt="Scrolling a feed: the sponsored post is covered by a big OBEY-style message that follows the scroll" width="300">
 </p>
@@ -47,9 +49,15 @@ These screenshots come from the **sandbox** built into the app: skeleton mockups
 
 ## Status
 
-**Version 0.1.0.** Detection, messages, the home screen, the quick settings tile and the sandbox work.
+**Beta, not stable and not final.** Development is paused, and the way the app covers ads may change completely.
 
-For the real apps, each label is checked by hand before it's added: the app never guesses. The labels of Instagram and YouTube ("Sponsorisée") and Reddit ("Publicité") were read on October 31, 2026 on a phone set to French.
+Detection, messages, the home screen, the quick settings tile and the sandbox work. In the real apps, it isn't usable yet:
+
+- **Instagram:** ads get covered, but scrolling stutters because the covers can't keep up with the feed. It's much less smooth than the Chrome extension.
+- **YouTube and Reddit:** nothing gets covered, and the cause isn't known yet.
+- **Release 0.1.0:** it doesn't include the real-app labels, so it covers nothing in these apps. Only the sandbox works.
+
+The labels of Instagram and YouTube ("Sponsorisée") and Reddit ("Publicité") were read by hand on October 31, 2026 on a phone set to French: the app never guesses.
 
 ## Install
 

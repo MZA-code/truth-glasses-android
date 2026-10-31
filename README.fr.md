@@ -14,6 +14,8 @@
 
 ---
 
+> ⚠️ **Version bêta : ni stable, ni définitive.** Attendez-vous à des bugs et à de gros changements. Voir [État du projet](#état-du-projet).
+
 <p align="center">
   <img src="docs/images/demo-fr.gif" alt="Défilement d'un fil : le post sponsorisé est recouvert par un grand message qui suit le scroll" width="300">
 </p>
@@ -47,9 +49,15 @@ Ces captures viennent du **bac à sable** intégré à l'appli : des maquettes s
 
 ## État du projet
 
-**Version 0.1.0.** La détection, les messages, l'écran d'accueil, la tuile des réglages rapides et le bac à sable fonctionnent.
+**Bêta, ni stable ni définitive.** Le développement est en pause, et la façon de recouvrir les pubs pourrait changer complètement.
 
-Pour les vraies applis, le libellé de chacune est vérifié à la main avant d'être ajouté : l'appli ne devine jamais. Ceux d'Instagram et de YouTube (« Sponsorisée ») et de Reddit (« Publicité ») ont été relevés le 31 octobre 2026 sur un téléphone en français.
+La détection, les messages, l'écran d'accueil, la tuile des réglages rapides et le bac à sable fonctionnent. Dans les vraies applis, ce n'est pas encore utilisable :
+
+- **Instagram :** les pubs sont recouvertes, mais le scroll saccade, car les blocs n'arrivent pas à suivre le fil. C'est bien moins fluide que l'extension Chrome.
+- **YouTube et Reddit :** rien n'est recouvert, et la cause n'est pas encore connue.
+- **Release 0.1.0 :** elle ne contient pas les libellés des vraies applis, donc elle ne recouvre rien dans ces applis. Seul le bac à sable y fonctionne.
+
+Les libellés d'Instagram et de YouTube (« Sponsorisée ») et de Reddit (« Publicité ») ont été relevés à la main le 31 octobre 2026 sur un téléphone en français : l'appli ne devine jamais.
 
 ## Installation
 
