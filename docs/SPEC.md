@@ -239,6 +239,8 @@ C'est l'outil principal pour trouver et vérifier les libellés des vraies appli
 
 Un faux fil en Compose (`LazyColumn`) avec une vingtaine de posts : des posts normaux (texte, image en dégradé) et, tous les 3 ou 4 posts, un post marqué « Sponsorisé » ou « Sponsored » avec de fausses marques et des textes qui déclenchent chaque thème (« NovaBank — Crédit TAEG 2,9 % », « GLOWÉ — Crème anti-âge », « ROYAL SPIN — Bonus de bienvenue »…). Inclure aussi une bannière étroite pour tester le format fin.
 
+À côté de ce fil générique, trois onglets proposent des maquettes « squelette » qui reprennent la mise en page d'Instagram, de YouTube et de Reddit (code dans `sandbox/`) : des formes grises à la place des logos, des icônes et des compteurs, sans les couleurs ni les noms des marques dans l'écran. Les 13 pubs y sont réparties pour que chaque thème apparaisse. Chaque maquette affiche le libellé relevé dans la vraie appli (`sandbox_label_*` dans les ressources), qui doit aussi figurer dans le profil du bac à sable. Ces maquettes servent aux tests et aux captures du README, à la place de dumps des vraies applis.
+
 Le package de l'appli fait partie des cibles, ce qui permet de tester toute la chaîne sur un émulateur sans Instagram. **C'est la première chose à faire marcher.**
 
 ### 4.8 Les réglages — `Prefs`

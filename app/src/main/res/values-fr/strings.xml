@@ -19,6 +19,16 @@
     <string name="sandbox_name">Bac à sable</string>
     <string name="app_not_verified">Détection pas encore vérifiée</string>
     <string name="open_sandbox">Tester dans le bac à sable</string>
+
+    <string name="sandbox_tab_feed">Fil</string>
+    <string name="sandbox_tab_photos">Façon Instagram</string>
+    <string name="sandbox_tab_videos">Façon YouTube</string>
+    <string name="sandbox_tab_forum">Façon Reddit</string>
+    <string name="sandbox_cta">En savoir plus</string>
+    <!-- Libellés des maquettes : à remplacer par ceux relevés dans les vraies applis -->
+    <string name="sandbox_label_photos">Sponsorisé</string>
+    <string name="sandbox_label_videos">Sponsorisé</string>
+    <string name="sandbox_label_forum">Sponsorisé</string>
     <string name="debug_mode">Mode debug</string>
     <string name="debug_mode_summary">Contour rouge autour des libellés détectés, bleu autour des blocs recouverts, arbre de l\'écran dans les logs (adb logcat -s TG).</string>
     <string name="transparency">Aucune connexion Internet. Rien n\'est enregistré ni envoyé.</string>

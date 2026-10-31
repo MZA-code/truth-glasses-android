@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,28 +17,49 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.isTraversalGroup
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import io.github.mzacode.truthglasses.sandbox.Ad
+import io.github.mzacode.truthglasses.sandbox.Banner
+import io.github.mzacode.truthglasses.sandbox.FakeImage
+import io.github.mzacode.truthglasses.sandbox.ForumMockup
+import io.github.mzacode.truthglasses.sandbox.PhotoMockup
+import io.github.mzacode.truthglasses.sandbox.Post
+import io.github.mzacode.truthglasses.sandbox.VideoMockup
+import io.github.mzacode.truthglasses.sandbox.feedItem
+import io.github.mzacode.truthglasses.sandbox.interleave
+import io.github.mzacode.truthglasses.sandbox.parseAds
+import io.github.mzacode.truthglasses.sandbox.parsePosts
 import io.github.mzacode.truthglasses.ui.TruthGlassesTheme
 
-// Une pub tous les 3 posts, assez de posts pour que chaque thème apparaisse une fois
+// Fil générique : une pub tous les 3 posts, chaque thème apparaît une fois
 private const val NORMAL_POSTS_BETWEEN_ADS = 2
 private const val BANNER_POSITION = 8
 
-private sealed interface FeedItem
-private data class Post(val author: String, val text: String) : FeedItem
-private data class Ad(val label: String, val brand: String, val text: String) : FeedItem
-private data object Banner : FeedItem
+// Les 13 pubs sont réparties entre les maquettes pour que chaque thème y apparaisse aussi
+private val PHOTO_ADS = 0..4
+private val VIDEO_ADS = 5..8
+private val FORUM_ADS = 9..12
+
+private enum class SandboxTab(@StringRes val title: Int) {
+    FEED(R.string.sandbox_tab_feed),
+    PHOTOS(R.string.sandbox_tab_photos),
+    VIDEOS(R.string.sandbox_tab_videos),
+    FORUM(R.string.sandbox_tab_forum)
+}
 
 class SandboxActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,21 +68,31 @@ class SandboxActivity : ComponentActivity() {
         setContent {
             TruthGlassesTheme {
                 Surface(Modifier.fillMaxSize()) {
-                    val feed = buildFeed(
-                        stringArrayResource(R.array.sandbox_ads),
-                        stringArrayResource(R.array.sandbox_posts)
-                    )
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize().safeDrawingPadding(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        items(feed) { item ->
-                            when (item) {
-                                is Post -> FeedCard(item.author, item.text, null)
-                                is Ad -> FeedCard(item.brand, item.text, item.label)
-                                Banner -> NarrowBanner()
+                    var tab by rememberSaveable { mutableStateOf(SandboxTab.FEED) }
+                    val ads = parseAds(stringArrayResource(R.array.sandbox_ads))
+                    val posts = parsePosts(stringArrayResource(R.array.sandbox_posts))
+                    val cta = stringResource(R.string.sandbox_cta)
+                    Column(Modifier.fillMaxSize().safeDrawingPadding()) {
+                        PrimaryScrollableTabRow(selectedTabIndex = tab.ordinal, edgePadding = 0.dp) {
+                            SandboxTab.entries.forEach {
+                                Tab(
+                                    selected = it == tab,
+                                    onClick = { tab = it },
+                                    text = { Text(stringResource(it.title)) }
+                                )
                             }
+                        }
+                        when (tab) {
+                            SandboxTab.FEED -> GenericFeed(ads, posts)
+                            SandboxTab.PHOTOS -> PhotoMockup(
+                                ads.slice(PHOTO_ADS), posts, stringResource(R.string.sandbox_label_photos), cta
+                            )
+                            SandboxTab.VIDEOS -> VideoMockup(
+                                ads.slice(VIDEO_ADS), posts, stringResource(R.string.sandbox_label_videos), cta
+                            )
+                            SandboxTab.FORUM -> ForumMockup(
+                                ads.slice(FORUM_ADS), posts, stringResource(R.string.sandbox_label_forum), cta
+                            )
                         }
                     }
                 }
@@ -70,40 +101,36 @@ class SandboxActivity : ComponentActivity() {
     }
 }
 
-private fun buildFeed(ads: Array<String>, posts: Array<String>): List<FeedItem> {
-    val feed = mutableListOf<FeedItem>()
-    var postIndex = 0
-    ads.forEach { ad ->
-        repeat(NORMAL_POSTS_BETWEEN_ADS) {
-            val (author, text) = posts[postIndex++ % posts.size].split('|', limit = 2)
-            feed += Post(author, text)
+@Composable
+private fun GenericFeed(ads: List<Ad>, posts: List<Post>) {
+    val feed = interleave(ads, posts, NORMAL_POSTS_BETWEEN_ADS).apply { add(BANNER_POSITION, Banner) }
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        items(feed) { item ->
+            when (item) {
+                is Post -> FeedCard(item.author, item.text, null)
+                is Ad -> FeedCard(item.brand, item.text, item.label)
+                Banner -> NarrowBanner()
+            }
         }
-        val (label, brand, text) = ad.split('|', limit = 3)
-        feed += Ad(label, brand, text)
     }
-    feed.add(BANNER_POSITION, Banner)
-    return feed
 }
 
-// isTraversalGroup donne au post son propre nœud d'accessibilité : sans lui, ses textes
-// seraient des enfants directs de la liste et le bloc ne couvrirait que le libellé
 @Composable
 private fun FeedCard(title: String, text: String, label: String?) {
     Column(
         Modifier
             .fillMaxWidth()
-            .semantics { isTraversalGroup = true }
+            .feedItem()
             .padding(16.dp)
     ) {
         Text(title, style = MaterialTheme.typography.titleMedium)
         if (label != null) Text(label, style = MaterialTheme.typography.labelSmall)
         Text(text, Modifier.padding(vertical = 8.dp))
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .background(Brush.verticalGradient(gradientFor(title)))
-        )
+        FakeImage(title, Modifier.fillMaxWidth().height(180.dp))
     }
 }
 
@@ -113,7 +140,7 @@ private fun NarrowBanner() {
         Modifier
             .width(160.dp)
             .height(240.dp)
-            .semantics { isTraversalGroup = true }
+            .feedItem()
             .background(Color(0xFFFFE082))
             .padding(8.dp)
     ) {
@@ -121,10 +148,4 @@ private fun NarrowBanner() {
         Text(stringResource(R.string.sandbox_banner_label), color = Color.Black, style = MaterialTheme.typography.labelSmall)
         Text(stringResource(R.string.sandbox_banner_text), color = Color.Black, style = MaterialTheme.typography.titleMedium)
     }
-}
-
-// Dégradé stable, dérivé du nom affiché
-private fun gradientFor(title: String): List<Color> {
-    val hue = (title.hashCode() and Int.MAX_VALUE) % 360
-    return listOf(Color.hsv(hue.toFloat(), 0.5f, 0.9f), Color.hsv(hue.toFloat(), 0.8f, 0.5f))
 }

@@ -20,6 +20,16 @@
     <string name="sandbox_name">Sandbox</string>
     <string name="app_not_verified">Detection not verified yet</string>
     <string name="open_sandbox">Test in the sandbox</string>
+
+    <string name="sandbox_tab_feed">Feed</string>
+    <string name="sandbox_tab_photos">Instagram-style</string>
+    <string name="sandbox_tab_videos">YouTube-style</string>
+    <string name="sandbox_tab_forum">Reddit-style</string>
+    <string name="sandbox_cta">Learn more</string>
+    <!-- Libellés des maquettes : à remplacer par ceux relevés dans les vraies applis -->
+    <string name="sandbox_label_photos">Sponsored</string>
+    <string name="sandbox_label_videos">Sponsored</string>
+    <string name="sandbox_label_forum">Sponsored</string>
     <string name="debug_mode">Debug mode</string>
     <string name="debug_mode_summary">Red outline around detected labels, blue around covered blocks, screen tree in the logs (adb logcat -s TG).</string>
     <string name="transparency">No Internet connection. Nothing is stored or sent.</string>
