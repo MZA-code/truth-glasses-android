@@ -50,6 +50,7 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         scan()
     }
     private val finalScan = Runnable { scan() }
+    private val dumpTree = Runnable { logTree() }
 
     // packageNames filtre aussi les événements de sortie : quand l'utilisateur quitte une appli
     // cible, on n'est pas prévenu (hors des applis cibles, rootInActiveWindow vaut null). Le volet
@@ -116,8 +117,12 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
             val dy = event.scrollDeltaY.takeUnless { it == SCROLL_DELTA_UNDEFINED } ?: 0
             if (dx != 0 || dy != 0) overlay?.offsetBy(-dx.toFloat(), -dy.toFloat())
         }
-        if (prefs.debugMode && event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            logTree()
+        if (prefs.debugMode && (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
+                event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED)
+        ) {
+            // Arbre écrit une fois l'écran immobile : le dernier du log est celui qu'on regarde
+            handler.removeCallbacks(dumpTree)
+            handler.postDelayed(dumpTree, DUMP_DELAY_MS)
         }
         scheduleScan()
     }
@@ -266,6 +271,7 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         private const val SCAN_INTERVAL_MS = 100L
         private const val FINAL_SCAN_DELAY_MS = 150L
         private const val WATCH_MS = 300L
+        private const val DUMP_DELAY_MS = 700L
         private const val MIN_BLOCK_SIDE_DP = 48f
         // Valeur renvoyée par scrollDeltaX/Y quand l'appli ne les remplit pas
         private const val SCROLL_DELTA_UNDEFINED = -1

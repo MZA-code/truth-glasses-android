@@ -34,4 +34,14 @@ class TreeDumpTest {
         assertFalse(lines.any { it.contains("Sponsorisé") || it.contains("Camille") })
         assertTrue(lines[2], lines[2].contains("text=<10 chars>"))
     }
+
+    @Test
+    fun `multiline text stays on one line`() {
+        val caption = FakeNode(Bounds(0, 0, 100, 100), text = "Ligne 1\nLigne 2\r\nLigne 3")
+
+        val lines = TreeDump.lines(caption, redact = false)
+
+        assertEquals(1, lines.size)
+        assertTrue(lines[0], lines[0].contains("text=\"Ligne 1\\nLigne 2\\nLigne 3\""))
+    }
 }

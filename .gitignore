@@ -15,3 +15,6 @@ keystore.properties
 .idea/
 *.iml
 .remember/
+
+# Dumps des vraies applis (contenu personnel du fil)
+dumps/

@@ -231,7 +231,7 @@ Petit plus facultatif : une apparition qui clignote (2 ou 3 frames d'alpha, envi
 Quand il est activé dans l'appli :
 
 - un contour rouge est dessiné autour de chaque **libellé** détecté, et un contour bleu autour de chaque **conteneur** retenu ;
-- à chaque `TYPE_WINDOW_STATE_CHANGED`, l'arbre de l'écran est loggé sous le tag `TG` (classe, texte, `contentDescription`, `viewIdResourceName`, `isScrollable`, limites), avec une indentation par profondeur.
+- après un `TYPE_WINDOW_STATE_CHANGED` ou un scroll, une fois l'écran immobile depuis 0,7 s, l'arbre de l'écran est loggé sous le tag `TG` (classe, texte, `contentDescription`, `viewIdResourceName`, `isScrollable`, limites), avec une indentation par profondeur et une ligne par nœud (les retours à la ligne du texte sont échappés). Le dernier arbre du log est donc celui de l'écran affiché.
 
 C'est l'outil principal pour trouver et vérifier les libellés des vraies applis (section 4.2). En build release, le texte et la `contentDescription` sont remplacés par leur longueur (`text=<12 chars>`) : le contenu de l'écran n'apparaît jamais dans les logs. Pour relever des libellés, utiliser un build debug.
 

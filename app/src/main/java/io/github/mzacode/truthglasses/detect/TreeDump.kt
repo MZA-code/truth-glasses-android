@@ -32,6 +32,13 @@ object TreeDump {
     private fun StringBuilder.appendContent(name: String, value: CharSequence?, redact: Boolean) {
         if (value.isNullOrEmpty()) return
         append(' ').append(name).append('=')
-        if (redact) append('<').append(value.length).append(" chars>") else append('"').append(value).append('"')
+        if (redact) {
+            append('<').append(value.length).append(" chars>")
+        } else {
+            // Un retour à la ligne couperait le nœud en plusieurs lignes de log
+            append('"').append(value.toString().replace(LINE_BREAK, "\\\\n")).append('"')
+        }
     }
+
+    private val LINE_BREAK = Regex("\r\n|\r|\n")
 }
