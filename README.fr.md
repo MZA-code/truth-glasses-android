@@ -18,7 +18,7 @@
   <img src="docs/images/demo-fr.gif" alt="Défilement d'un fil : le post sponsorisé est recouvert par un grand message qui suit le scroll" width="300">
 </p>
 
-Truth Glasses est la petite sœur de l'extension Chrome **Lunettes de vérité**<!-- TODO: lien vers l'extension Chrome -->. Quand les lunettes sont mises, chaque post sponsorisé repéré dans une appli surveillée est recouvert par un bloc gris clair bordé de noir, avec un message ironique en grosses capitales. Le message dépend du sujet de la pub : crédit, soldes, essai gratuit, beauté, jeux d'argent, voiture, crypto… et un message générique pour tout le reste.
+Truth Glasses est la petite sœur de l'[extension Chrome **Lunettes de vérité**](https://github.com/MZA-code/truth-glasses). Quand les lunettes sont mises, chaque post sponsorisé repéré dans une appli surveillée est recouvert par un bloc gris clair bordé de noir, avec un message ironique en grosses capitales. Le message dépend du sujet de la pub : crédit, soldes, essai gratuit, beauté, jeux d'argent, voiture, crypto… et un message générique pour tout le reste.
 
 C'est une blague qui a un fond. L'appli ne bloque rien : la pub est toujours là, sous un autocollant qui dit ce qu'elle raconte vraiment.
 

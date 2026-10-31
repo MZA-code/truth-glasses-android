@@ -18,7 +18,7 @@
   <img src="docs/images/demo.gif" alt="Scrolling a feed: the sponsored post is covered by a big OBEY-style message that follows the scroll" width="300">
 </p>
 
-Truth Glasses is the little sibling of the **Truth Glasses** Chrome extension<!-- TODO: lien vers l'extension Chrome -->. When the glasses are on, every sponsored post it spots in a watched app is covered by a light grey block with a black border and an ironic message in big capitals. The message depends on what the ad is about: credit, sales, free trials, beauty, gambling, cars, crypto… and a generic one for everything else.
+Truth Glasses is the little sibling of the [**Truth Glasses** Chrome extension](https://github.com/MZA-code/truth-glasses). When the glasses are on, every sponsored post it spots in a watched app is covered by a light grey block with a black border and an ironic message in big capitals. The message depends on what the ad is about: credit, sales, free trials, beauty, gambling, cars, crypto… and a generic one for everything else.
 
 It's a joke with a point. It doesn't block anything: the ad is still there, under a sticker that tells you what it's really saying.
 
