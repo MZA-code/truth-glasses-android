@@ -30,8 +30,8 @@ C'est une blague qui a un fond. L'appli ne bloque rien : la pub est toujours là
     <th>Avec les lunettes</th>
   </tr>
   <tr>
-    <td><img src="docs/images/before-fr.png" alt="Un post façon Instagram marqué Sponsorisé, avec son image et un bandeau En savoir plus" width="270"></td>
-    <td><img src="docs/images/after-fr.png" alt="Le même post recouvert par un bloc ACHÈTE" width="270"></td>
+    <td><img src="docs/images/before-fr.png" alt="Un post façon Instagram marqué Sponsorisée, avec son image et un bandeau En savoir plus" width="270"></td>
+    <td><img src="docs/images/after-fr.png" alt="Le même post recouvert par un bloc CONFORME-TOI" width="270"></td>
   </tr>
 </table>
 
@@ -39,7 +39,7 @@ Ces captures viennent du **bac à sable** intégré à l'appli : des maquettes s
 
 <table>
   <tr>
-    <td><img src="docs/images/youtube-fr.png" alt="Maquette façon YouTube : une vidéo sponsorisée recouverte par VIEILLIR EST INTERDIT" width="270"></td>
+    <td><img src="docs/images/youtube-fr.png" alt="Maquette façon YouTube : une vidéo sponsorisée recouverte par TU N'ES PAS ASSEZ BIEN" width="270"></td>
     <td><img src="docs/images/reddit-fr.png" alt="Maquette façon Reddit : un post sponsorisé recouvert par L'ANCIEN MARCHAIT TRÈS BIEN" width="270"></td>
     <td><img src="docs/images/home-fr.png" alt="Écran d'accueil : interrupteur des lunettes, applis surveillées, bac à sable, tuile des réglages rapides, mode debug" width="270"></td>
   </tr>
@@ -49,7 +49,7 @@ Ces captures viennent du **bac à sable** intégré à l'appli : des maquettes s
 
 **Version 0.1.0.** La détection, les messages, l'écran d'accueil, la tuile des réglages rapides et le bac à sable fonctionnent.
 
-Pour les vraies applis, le libellé « Sponsorisé » de chacune doit être vérifié à la main avant d'être ajouté : l'appli ne devine jamais. En attendant, Instagram, YouTube et Reddit affichent **« Détection pas encore vérifiée »** sur l'accueil, et rien n'y est recouvert.
+Pour les vraies applis, le libellé de chacune est vérifié à la main avant d'être ajouté : l'appli ne devine jamais. Ceux d'Instagram et de YouTube (« Sponsorisée ») et de Reddit (« Publicité ») ont été relevés le 31 octobre 2026 sur un téléphone en français.
 
 ## Installation
 
@@ -76,6 +76,7 @@ Un service d'accessibilité peut lire ce qui s'affiche à l'écran : la méfianc
 
 ## Limites
 
+- **Seulement en français pour l'instant.** Les libellés anglais des vraies applis ne sont pas encore vérifiés : sur un téléphone en anglais, leurs pubs ne sont pas recouvertes.
 - **Seulement les pubs du fil.** Les pubs vidéo en plein écran (pré-roll YouTube, pubs entre les stories Instagram) ne sont pas recouvertes.
 - **Les applis changent.** Quand une appli renomme son libellé « Sponsorisé » ou réorganise son affichage, la détection casse jusqu'à la mise à jour du profil. C'est normal.
 - **Un léger retard au scroll rapide.** Les blocs suivent le scroll tout de suite, puis sont corrigés au scan suivant de l'écran.

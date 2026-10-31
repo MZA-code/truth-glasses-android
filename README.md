@@ -49,7 +49,7 @@ These screenshots come from the **sandbox** built into the app: skeleton mockups
 
 **Version 0.1.0.** Detection, messages, the home screen, the quick settings tile and the sandbox work.
 
-For the real apps, the "Sponsored" label each one shows must be checked by hand before it's added: the app never guesses. Until that's done, Instagram, YouTube and Reddit show **"Detection not verified yet"** on the home screen and nothing is covered in them.
+For the real apps, each label is checked by hand before it's added: the app never guesses. The labels of Instagram and YouTube ("Sponsorisée") and Reddit ("Publicité") were read on October 31, 2026 on a phone set to French.
 
 ## Install
 
@@ -76,6 +76,7 @@ An accessibility service can read what's on your screen, so it deserves suspicio
 
 ## Limits
 
+- **French only for now.** The English labels of the real apps aren't verified yet: on a phone set to English, their ads aren't covered.
 - **Feed ads only.** Full-screen video ads (YouTube pre-rolls, ads between Instagram stories) aren't covered.
 - **Apps change.** When an app renames its "Sponsored" label or reshuffles its layout, detection breaks until the profile is updated. That's expected.
 - **A small delay on fast scrolls.** The covers follow the scroll right away, then get corrected by the next screen scan.

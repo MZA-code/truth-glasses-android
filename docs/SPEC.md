@@ -111,20 +111,20 @@ data class AppProfile(
     val packageName: String,
     val displayName: String,
     val sponsorLabels: List<Regex>,   // libellé EXACT d'un nœud (texte ou contentDescription), trim
-    val verifiedOn: String?           // date de vérification avec un dump, null = pas encore vérifié
+    val verifiedOn: String?           // date de vérification sur l'appareil, null = pas encore vérifié
 )
 ```
 
-Packages de départ (à confirmer sur l'appareil) :
+Libellés relevés à l'écran le 2026-10-31, sur un téléphone en français :
 
-| Appli | Package | Libellés probables (à vérifier) |
+| Appli | Package | Libellés vérifiés |
 |---|---|---|
-| Instagram | `com.instagram.android` | `Sponsorisé`, `Sponsored` |
-| Reddit | `com.reddit.frontpage` | `Promoted`, `Sponsorisé` |
-| YouTube | `com.google.android.youtube` | `Sponsorisé`, `Sponsored`, `Annonce`, `Ad` |
-| Bac à sable | le package de l'appli elle-même | `Sponsorisé`, `Sponsored` |
+| Instagram | `com.instagram.android` | `Sponsorisée` |
+| Reddit | `com.reddit.frontpage` | `Publicité` |
+| YouTube | `com.google.android.youtube` | `Sponsorisée` |
+| Bac à sable | le package de l'appli elle-même | `Sponsorisé(e)`, `Sponsored`, `Publicité` |
 
-**Ces libellés sont des hypothèses.** Pour chaque appli, il faut faire un dump de l'écran sur un post sponsorisé (`adb shell uiautomator dump` ou le mode debug, voir 4.6), relever le texte exact et la `contentDescription`, puis remplir `verifiedOn`. Les applis changent leur interface régulièrement : on garde des regex simples et une correspondance exacte sur le nœud entier (`^sponsoris[ée]e?$`, insensible à la casse). Les libellés courts et ambigus (`Ad`, `Pub`) ne sont utilisés que dans le profil des applis où leur présence a été vérifiée.
+**On ne devine pas les libellés.** Pour chaque appli et chaque langue, l'utilisateur regarde une vraie pub et donne le mot exact, puis on remplit `verifiedOn` (pas de dump des vraies applis, voir 4.7). Les libellés anglais ne sont pas encore vérifiés : un téléphone en anglais ne détecte rien dans ces applis. Le mode debug (4.6) permet de confirmer que le nœud du libellé est bien reconnu. Les applis changent leur interface régulièrement : on garde des regex simples et une correspondance exacte sur le nœud entier (`^sponsoris[ée]e?$`, insensible à la casse). Les libellés courts et ambigus (`Ad`, `Pub`) ne sont utilisés que dans le profil des applis où leur présence a été vérifiée.
 
 Tant qu'un profil n'est pas vérifié, sa liste de libellés reste vide : l'appli apparaît dans l'accueil avec la mention « Détection pas encore vérifiée » et rien n'y est recouvert. L'écran d'accueil n'affiche que les applis installées. Utilise `packageManager.getPackageInfo` avec un bloc `<queries>` listant ces packages dans le manifeste (pas `QUERY_ALL_PACKAGES`).
 

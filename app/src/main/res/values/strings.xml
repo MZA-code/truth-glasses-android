@@ -26,7 +26,7 @@
     <string name="sandbox_tab_videos">YouTube-style</string>
     <string name="sandbox_tab_forum">Reddit-style</string>
     <string name="sandbox_cta">Learn more</string>
-    <!-- Libellés des maquettes : à remplacer par ceux relevés dans les vraies applis -->
+    <!-- Libellés des maquettes : les libellés anglais des vraies applis ne sont pas encore vérifiés -->
     <string name="sandbox_label_photos">Sponsored</string>
     <string name="sandbox_label_videos">Sponsored</string>
     <string name="sandbox_label_forum">Sponsored</string>
