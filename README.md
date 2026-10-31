@@ -95,7 +95,7 @@ The full specification is in [`docs/SPEC.md`](docs/SPEC.md) (in French) and the 
 
 ## Help check an app
 
-If you see an ad that isn't covered, turn on **Debug mode** on the home screen. Detected labels get a red outline and covered blocks a blue one. With a debug build, `adb logcat -s TG` prints the structure of the screen. Then open an issue with the exact label you see and where it sits (for example "Sponsored, under the username"). Please don't paste screen dumps: they contain your feed.
+If you see an ad that isn't covered, turn on **Debug mode** on the home screen. Detected labels get a red outline and covered blocks a blue one. With a debug build, `adb logcat -s TG` prints the structure of the screen, with the text of your feed hidden: only what looks like an ad label stays readable. Then open an issue with the exact label you see and where it sits (for example "Sponsored, under the username").
 
 ## License
 

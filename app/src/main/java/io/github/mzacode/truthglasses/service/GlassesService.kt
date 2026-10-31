@@ -262,9 +262,10 @@ class GlassesService : AccessibilityService(), SharedPreferences.OnSharedPrefere
         if (root.packageName?.toString() !in profiles) return
         val tree = AccessibilityUiTree(root)
         try {
-            // En release, le contenu lu à l'écran n'apparaît jamais dans les logs
+            // Le contenu du fil n'apparaît jamais dans les logs, et en release les libellés non plus
             Log.d(TAG, "--- ${root.packageName}")
-            TreeDump.lines(tree.root, redact = !BuildConfig.DEBUG).forEach { Log.d(TAG, it) }
+            val reveal = if (BuildConfig.DEBUG) TreeDump.LABEL_HINTS else null
+            TreeDump.lines(tree.root, reveal).forEach { Log.d(TAG, it) }
         } finally {
             tree.recycle()
         }

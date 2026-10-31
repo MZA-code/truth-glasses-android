@@ -2,7 +2,7 @@
 
 À dérouler avant chaque release, sur un téléphone ou un émulateur, avec l'APK release signé (`truth-glasses-vX.Y.Z.apk`). Les tests unitaires (`./gradlew testDebugUnitTest`) couvrent déjà la détection, le décodeur, l'ajustement du texte et la mémoire des pubs : cette liste couvre ce qu'ils ne voient pas.
 
-Pour suivre les contours et les logs, activer le **Mode debug** (un build debug affiche aussi le texte des nœuds dans `adb logcat -s TG`).
+Pour suivre les contours et les logs, activer le **Mode debug** (un build debug affiche aussi les textes qui ressemblent à un libellé de pub dans `adb logcat -s TG`).
 
 ## Installation et premier lancement
 
@@ -32,7 +32,7 @@ Pour suivre les contours et les logs, activer le **Mode debug** (un build debug 
 - [ ] « Ajouter la tuile Lunettes » (Android 13 et plus) propose d'ajouter la tuile.
 - [ ] La tuile passe de active à inactive et inversement, et l'état de l'accueil suit.
 - [ ] Service désactivé : toucher la tuile ouvre l'accueil.
-- [ ] Mode debug : contour rouge autour des libellés, bleu autour des blocs, arbre de l'écran dans `adb logcat -s TG` une fois le scroll arrêté. En release, le texte des nœuds est remplacé par sa longueur.
+- [ ] Mode debug : contour rouge autour des libellés, bleu autour des blocs, arbre de l'écran dans `adb logcat -s TG` une fois le scroll arrêté. Le texte des nœuds est remplacé par sa longueur, sauf en build debug pour ce qui ressemble à un libellé.
 - [ ] Mode debug désactivé : aucun log sous le tag `TG`.
 
 ## Robustesse

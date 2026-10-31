@@ -234,9 +234,9 @@ Petit plus facultatif : une apparition qui clignote (2 ou 3 frames d'alpha, envi
 Quand il est activé dans l'appli :
 
 - un contour rouge est dessiné autour de chaque **libellé** détecté, et un contour bleu autour de chaque **conteneur** retenu ;
-- après un `TYPE_WINDOW_STATE_CHANGED` ou un scroll, une fois l'écran immobile depuis 0,7 s, l'arbre de l'écran est loggé sous le tag `TG` (classe, texte, `contentDescription`, `viewIdResourceName`, `isScrollable`, limites), avec une indentation par profondeur et une ligne par nœud (les retours à la ligne du texte sont échappés). Le dernier arbre du log est donc celui de l'écran affiché.
+- après un `TYPE_WINDOW_STATE_CHANGED` ou un scroll, une fois l'écran immobile depuis 0,7 s, l'arbre de l'écran est loggé sous le tag `TG` (classe, longueur du texte et de la `contentDescription`, `viewIdResourceName`, `isScrollable`, limites), avec une indentation par profondeur et une ligne par nœud (les retours à la ligne du texte sont échappés). Le dernier arbre du log est donc celui de l'écran affiché.
 
-C'est l'outil principal pour trouver et vérifier les libellés des vraies applis (section 4.2). En build release, le texte et la `contentDescription` sont remplacés par leur longueur (`text=<12 chars>`) : le contenu de l'écran n'apparaît jamais dans les logs. Pour relever des libellés, utiliser un build debug.
+C'est l'outil principal pour trouver et vérifier les libellés des vraies applis (section 4.2). Le texte et la `contentDescription` sont remplacés par leur longueur (`text=<12 chars>`) : le contenu du fil n'apparaît jamais dans les logs. En build debug seulement, ceux qui ressemblent à un libellé de pub (`TreeDump.LABEL_HINTS`) restent lisibles, coupés à 80 caractères : c'est ce qui permet de voir où est le libellé et comment le post est découpé.
 
 ### 4.7 Le bac à sable — `SandboxActivity`
 

@@ -95,7 +95,7 @@ La spécification complète est dans [`docs/SPEC.md`](docs/SPEC.md) et la liste 
 
 ## Aider à vérifier une appli
 
-Si une pub n'est pas recouverte, activez le **Mode debug** sur l'accueil : les libellés détectés sont entourés en rouge et les blocs recouverts en bleu. Avec un build debug, `adb logcat -s TG` affiche la structure de l'écran. Ouvrez ensuite une issue avec le libellé exact et sa position (par exemple « Sponsorisé, sous le pseudo »). Merci de ne pas coller de dump d'écran : il contient votre fil.
+Si une pub n'est pas recouverte, activez le **Mode debug** sur l'accueil : les libellés détectés sont entourés en rouge et les blocs recouverts en bleu. Avec un build debug, `adb logcat -s TG` affiche la structure de l'écran, sans le texte de votre fil : seul ce qui ressemble à un libellé de pub reste lisible. Ouvrez ensuite une issue avec le libellé exact et sa position (par exemple « Sponsorisé, sous le pseudo »).
 
 ## Licence
 
