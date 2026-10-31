@@ -31,12 +31,23 @@ jobs:
       - name: Decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "Secret KEYSTORE_BASE64 missing"
+          missing=0
+          for name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Repository secret $name is missing (Settings > Secrets and variables > Actions)"
+              missing=1
+            fi
+          done
+          [ "$missing" = 0 ] || exit 1
+          # Les espaces et retours à la ligne ajoutés au copier-coller sont ignorés
+          if ! printf '%s' "$KEYSTORE_BASE64" | tr -d '[:space:]' | base64 -d > "$RUNNER_TEMP/release.jks"; then
+            echo "::error::KEYSTORE_BASE64 is not valid base64 (use: base64 -w0 release.jks)"
             exit 1
           fi
-          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
 
       - name: Build signed APK
         env:
