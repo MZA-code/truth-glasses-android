@@ -161,6 +161,8 @@ Algorithme pour un scan :
 8. Dédoublonner : si un conteneur est inclus dans un autre, ne garder que le plus grand.
 9. Résultat : `List<AdHit(bounds: Bounds, adText: String, packageName: String, labelBounds: Bounds?, fingerprint: Set<Int>)>`, avec `labelBounds` null pour une pub reconnue par la mémoire.
 
+L'enveloppe `AccessibilityUiTree` renvoie un texte `null` pour les champs de saisie (`isEditable` ou `isPassword`) : ce que tape l'utilisateur n'est jamais lu, ni par la détection ni par le mode debug.
+
 Sur Android 13 et plus, ne pas appeler `recycle()` (inutile). Sur les versions plus anciennes, un `recycle()` dans un `finally` évite les fuites. L'enveloppe `UiNode` peut gérer ça.
 
 ### 4.4 Le décodeur — `Themes` et `MessageDecoder`

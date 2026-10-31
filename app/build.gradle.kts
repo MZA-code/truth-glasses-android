@@ -15,6 +15,29 @@ android {
         versionName = "0.1.0"
     }
 
+    // Signature de la release : fournie par la CI (secrets du dépôt, voir release.yml) ou en local
+    // par des variables d'environnement. Sans elles, assembleRelease produit un APK non signé.
+    val keystorePath = providers.environmentVariable("TG_KEYSTORE_PATH").orNull
+    signingConfigs {
+        if (keystorePath != null) {
+            create("release") {
+                storeFile = file(keystorePath)
+                storePassword = providers.environmentVariable("TG_KEYSTORE_PASSWORD").orNull
+                keyAlias = providers.environmentVariable("TG_KEY_ALIAS").orNull
+                keyPassword = providers.environmentVariable("TG_KEY_PASSWORD").orNull
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            signingConfig = signingConfigs.findByName("release")
+        }
+    }
+
     buildFeatures {
         compose = true
         buildConfig = true
